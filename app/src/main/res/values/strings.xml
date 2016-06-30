@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">StarBuzz</string>
+    <string-array name="options">
+        <item>Напитки</item>
+        <item>Еда</item>
+        <item>Развлечения</item>
+    </string-array>
+    <string name="title_activity_drink"></string>
+    <string name="title_adrin"></string>
+    <string name="favorite">любимый напиток</string>
+</resources>
