@@ -17,6 +17,7 @@ public class TopLevelActivity extends Activity {
     private SQLiteDatabase db;
     private Cursor cursor;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
