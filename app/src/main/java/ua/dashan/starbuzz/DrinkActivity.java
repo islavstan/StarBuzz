@@ -89,6 +89,12 @@ public class DrinkActivity extends Activity {
     //Обновление базы данных по щелчку на флажке
     public void onFavoriteClicked(View view) {
         int drinkNo = (Integer) getIntent().getExtras().get("foodNo");
+        //в нашем приложении методу doInBackground() задачи AsyncTask должен передаваться напиток, выбранный пользователем
+        /*Тип параметра, передаваемого методу execute(), должен соответствовать типу пара-
+                метра, который ожидает получить метод doInBackground() объекта AsyncTask. Наш
+        метод doInBackground() получает параметры типа Integer, поэтому передавать нужно
+        целые числа*/
+        new UpdateDrinkTask().execute(drinkNo);//Выполнить задачу AsyncTask и передать ей идентификатор напитка.
     }
 //Внутренний класс для обновления напитка.
 private class UpdateDrinkTask extends AsyncTask<Integer,Void,Boolean>{
