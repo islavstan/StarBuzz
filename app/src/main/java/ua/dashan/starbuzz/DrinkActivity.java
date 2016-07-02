@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -86,9 +87,64 @@ public class DrinkActivity extends Activity {
         }
     }
     //Обновление базы данных по щелчку на флажке
-    public void onFavoriteClicked(View view){
-        int drinkNo=(Integer)getIntent().getExtras().get("foodNo");
+    public void onFavoriteClicked(View view) {
+        int drinkNo = (Integer) getIntent().getExtras().get("foodNo");
+    }
+//Внутренний класс для обновления напитка.
+private class UpdateDrinkTask extends AsyncTask<Integer,Void,Boolean>{
+    ContentValues drinkValues;
+//Прежде чем запускать код базы данных на выполнение, добавить значение флажка
+    //в объект ContentValues с именем drinkValues
+    @Override
+    protected void onPreExecute() {
         CheckBox favorite=(CheckBox)findViewById(R.id.favorite);
+        drinkValues=new ContentValues();
+        drinkValues.put("FAVORITE", favorite.isChecked());
+    }
+    //Код базы данных запускается на выполнение в фоновом потоке.
+    @Override
+    protected Boolean doInBackground(Integer... params) {//Код базы данных запускается на выполнение в фоновом потоке.
+        int drinkNo = params[0];
+        SQLiteOpenHelper starbuzzDatabaseHelper =
+                new StarBuzzDataBaseHelper(DrinkActivity.this);
+        try {
+            SQLiteDatabase db = starbuzzDatabaseHelper.getWritableDatabase();
+            db.update("DRINK", drinkValues,
+                    "_id = ?", new String[] {Integer.toString(drinkNo)});
+            db.close();
+            return true;
+        } catch(SQLiteException e) {
+            return false;
+        }
+    }
+    protected void onPostExecute(Boolean success) {
+        if (!success) {
+            Toast toast = Toast.makeText(DrinkActivity.this,
+                    "Database unavailable", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      /*  CheckBox favorite=(CheckBox)findViewById(R.id.favorite);
         ContentValues drinkValues=new ContentValues();
        // Значение флажка добавляется в объект ContentValues с именем drinkValues.
         drinkValues.put("FAVORITE",favorite.isChecked());
@@ -106,7 +162,7 @@ public class DrinkActivity extends Activity {
             toast.show();
 
     }
-}}
+}}*/
 
 
 
